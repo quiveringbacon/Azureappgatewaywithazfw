@@ -800,22 +800,6 @@ resource "azurerm_application_gateway" "appgw1" {
   }
   depends_on = [ data.azurerm_key_vault_secret.secret1,azurerm_user_assigned_identity.appgwidentity ]
 }
-/*
-resource "azurerm_network_interface" "vnic" {
-  count               = 2
-  name                = "vnic-${count.index}"
-  location            = azurerm_resource_group.RG.location
-  resource_group_name = azurerm_resource_group.RG.name
-
-  ip_configuration {
-    name                          = "ipconfig${count.index}"
-    subnet_id                     = azurerm_virtual_network.hub-vnet.subnet.*.id[0]
-    private_ip_address_allocation = "Dynamic"
-    primary                       = true
-    #public_ip_address_id = azurerm_public_ip.PIP[count.index].id
-  }
-}
-*/
 
 resource "azurerm_network_interface" "spokevm-nic" {
   location            = azurerm_resource_group.RG.location
@@ -835,57 +819,6 @@ resource "azurerm_network_interface" "spokevm-nic" {
   }
   
 }
-/*
-resource "azurerm_network_interface_application_gateway_backend_address_pool_association" "nic-assoc" {
-  count                   = 2
-  network_interface_id    = azurerm_network_interface.vnic[count.index].id
-  ip_configuration_name   = "ipconfig${count.index}"
-  backend_address_pool_id = azurerm_application_gateway.appgw1.backend_address_pool.*.id[0]
-}
-
-resource "azurerm_linux_virtual_machine" "webvm" {
-  count                 = 2
-  name                  = "vm-${count.index}"
-  location              = azurerm_resource_group.RG.location
-  resource_group_name   = azurerm_resource_group.RG.name
-  network_interface_ids = [azurerm_network_interface.vnic[count.index].id]
-  size                  = "Standard_B2ms"
-
-  os_disk {    
-    caching              = "ReadWrite"
-    storage_account_type = "Premium_LRS"
-  }
-
-  source_image_reference {
-    publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts-gen2"
-    version   = "latest"
-  }
-
-  admin_username                  = var.D-username
-  admin_password                  = var.E-password
-  disable_password_authentication = false
-  
-}
-
-#Install Nginx
-resource "azurerm_virtual_machine_extension" "vm_extension" {
-  count                = 2
-  name                 = "Nginx"
-  virtual_machine_id   = azurerm_linux_virtual_machine.webvm[count.index].id
-  publisher            = "Microsoft.Azure.Extensions"
-  type                 = "CustomScript"
-  type_handler_version = "2.0"
-
-  settings = <<SETTINGS
- {
-  "commandToExecute": "sudo apt-get update && sudo apt-get install nginx -y && echo '<h1>NGINX webserver-${count.index} is running</h1>' > /var/www/html/index.html && sudo systemctl restart nginx"
- }
-SETTINGS
-
-}
-*/
 
 resource "azurerm_windows_virtual_machine" "spokevm" {
   admin_password        = var.E-password
