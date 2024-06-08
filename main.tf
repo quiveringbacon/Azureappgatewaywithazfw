@@ -426,6 +426,7 @@ resource "azurerm_network_security_rule" "hubvnetnsgrule1" {
     update = "2h"
     delete = "2h"
   }
+  depends_on = [ azurerm_public_ip.spokevm-pip ]
   
 }
 
