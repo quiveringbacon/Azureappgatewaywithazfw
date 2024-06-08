@@ -335,6 +335,7 @@ resource "azurerm_key_vault" "certkv" {
 data "azurerm_public_ip" "vmpip"{
   resource_group_name = azurerm_resource_group.RG.name
   name = azurerm_public_ip.spokevm-pip.name
+  depends_on = [ azurerm_windows_virtual_machine.spokevm ]
 }
 
 
@@ -426,7 +427,7 @@ resource "azurerm_network_security_rule" "hubvnetnsgrule1" {
     update = "2h"
     delete = "2h"
   }
-  depends_on = [ azurerm_public_ip.spokevm-pip ]
+  
   
 }
 
@@ -820,6 +821,7 @@ resource "azurerm_network_interface" "spokevm-nic" {
   }
   
 }
+
 
 resource "azurerm_windows_virtual_machine" "spokevm" {
   admin_password        = var.E-password
