@@ -683,7 +683,7 @@ resource "azurerm_firewall" "azfw" {
 }
 #firewall logging
 resource "azurerm_monitor_diagnostic_setting" "fwlogs"{
-  name = "fwlogs"
+  name = "fwlogs-${random_pet.name.id}"
   target_resource_id = azurerm_firewall.azfw.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.LAW.id
   log_analytics_destination_type = "Dedicated"
