@@ -659,7 +659,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "azfwpolicyrcg" {
 }
 #log analytics workspace
 resource "azurerm_log_analytics_workspace" "LAW" {
-  name                = "LAW-01"
+  name                = "LAW-${random_pet.name.id}"
   location            = azurerm_resource_group.RG.location
   resource_group_name = azurerm_resource_group.RG.name
   
@@ -891,3 +891,4 @@ resource "azurerm_resource_group_template_deployment" "spokevmcert" {
 TEMPLATE
 depends_on = [ azurerm_resource_group_template_deployment.secret ]
 }
+
